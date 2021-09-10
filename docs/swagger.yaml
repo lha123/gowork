@@ -1,0 +1,185 @@
+definitions:
+  api.Ids:
+    properties:
+      ids:
+        items:
+          type: string
+        type: array
+    type: object
+  api.UserVo:
+    properties:
+      age:
+        description: 每页数据量
+        example: 23
+        type: integer
+      email:
+        description: 排序依据
+        example: l1277314169@163.com
+        type: string
+      id:
+        description: 可以为空
+        type: integer
+      name:
+        description: 页码
+        example: zhangsan
+        type: string
+    type: object
+  dao.Page:
+    properties:
+      page:
+        type: integer
+      size:
+        type: integer
+    type: object
+  dao.UserInfo:
+    properties:
+      age:
+        type: integer
+      createTime:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updateTime:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user/addUser:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ok
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: bool
+      summary: 新增一个用户
+  /user/del/{id}:
+    post:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: bool
+      summary: 删除一个用户
+  /user/findById/{id}:
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/dao.UserInfo'
+      summary: 查询一个用户
+  /user/findByIds:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ok
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/api.Ids'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"errno":0,"errmsg": "成功","data":userInfo}'
+          schema:
+            type: json
+      summary: 查询多个用户Ids
+  /user/queryAll:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"errno":0,"errmsg": "成功","data":userInfo}'
+          schema:
+            type: json
+      summary: 查询所用用户
+  /user/queryByUserParam:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ok
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"errno":0,"errmsg": "成功","data":userInfo}'
+          schema:
+            type: json
+      summary: 条件查询多个用户
+  /user/queryPage:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: ok
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/dao.Page'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"errno":0,"errmsg": "成功","data":userVo}'
+          schema:
+            type: json
+      summary: 查询多个用户
+  /user/updateUser:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserVo
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/api.UserVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: bool
+      summary: 编辑一个用户
+swagger: "2.0"

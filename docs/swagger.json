@@ -1,0 +1,289 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/user/addUser": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "新增一个用户",
+                "parameters": [
+                    {
+                        "description": "ok",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UserVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "bool"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/del/{id}": {
+            "post": {
+                "summary": "删除一个用户",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "bool"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/findById/{id}": {
+            "get": {
+                "summary": "查询一个用户",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "$ref": "#/definitions/dao.UserInfo"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/findByIds": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "查询多个用户Ids",
+                "parameters": [
+                    {
+                        "description": "ok",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.Ids"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"errno\":0,\"errmsg\": \"成功\",\"data\":userInfo}",
+                        "schema": {
+                            "type": "json"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/queryAll": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "查询所用用户",
+                "responses": {
+                    "200": {
+                        "description": "{\"errno\":0,\"errmsg\": \"成功\",\"data\":userInfo}",
+                        "schema": {
+                            "type": "json"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/queryByUserParam": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "条件查询多个用户",
+                "parameters": [
+                    {
+                        "description": "ok",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UserVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"errno\":0,\"errmsg\": \"成功\",\"data\":userInfo}",
+                        "schema": {
+                            "type": "json"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/queryPage": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "查询多个用户",
+                "parameters": [
+                    {
+                        "description": "ok",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dao.Page"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"errno\":0,\"errmsg\": \"成功\",\"data\":userVo}",
+                        "schema": {
+                            "type": "json"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/updateUser": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "编辑一个用户",
+                "parameters": [
+                    {
+                        "description": "UserVo",
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.UserVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "bool"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.Ids": {
+            "type": "object",
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "api.UserVo": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "description": "每页数据量",
+                    "type": "integer",
+                    "example": 23
+                },
+                "email": {
+                    "description": "排序依据",
+                    "type": "string",
+                    "example": "l1277314169@163.com"
+                },
+                "id": {
+                    "description": "可以为空",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "页码",
+                    "type": "string",
+                    "example": "zhangsan"
+                }
+            }
+        },
+        "dao.Page": {
+            "type": "object",
+            "properties": {
+                "page": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dao.UserInfo": {
+            "type": "object",
+            "properties": {
+                "age": {
+                    "type": "integer"
+                },
+                "createTime": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updateTime": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
