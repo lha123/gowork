@@ -1,9 +1,16 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 )
 
-func TestUser(t *testing.T) {
+type Person struct {
+	name string
+	age  int
+}
 
+func TestUser(t *testing.T) {
+	var p Person
+	fmt.Println(p)
 }

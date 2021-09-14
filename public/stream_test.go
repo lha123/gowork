@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"sort"
 	"testing"
 )
 
@@ -212,6 +213,13 @@ func (s *stream) Reduce(initialValue interface{}, fn func(pre interface{}, cur i
 	return initialValue
 }
 
+func (s *stream) Sort(fn func(i, j int) bool) []interface{} {
+	if s.list != nil {
+		sort.SliceStable(s.list, fn)
+	}
+	return s.list
+}
+
 type Student struct {
 	Id    int    `json:"id"`
 	Name  string `json:"name"`
@@ -220,6 +228,7 @@ type Student struct {
 }
 
 func TestStream(t *testing.T) {
+
 	s1 := Student{1, "张三", 10, 55}
 	s2 := Student{2, "李四", 9, 60}
 	s3 := Student{3, "王五", 9, 77}
@@ -228,6 +237,17 @@ func TestStream(t *testing.T) {
 	s6 := Student{6, "王八", 20, 80}
 	arr := make([]interface{}, 0)
 	arr = append(arr, s1, s2, s3, s4, s5, s6)
+
+	//arrs := []Student{s1, s2, s3, s4, s5, s6}
+
+	i := Stream(arr).Sort(func(i, j int) bool {
+		if arr[i].(Student).Age == arr[j].(Student).Age {
+			return arr[i].(Student).Score > arr[j].(Student).Score
+		}
+		return arr[i].(Student).Age < arr[j].(Student).Age
+	})
+
+	fmt.Println(i)
 
 	r1 := make([]Student, len(arr))
 	// 寻找所有年龄>10的学生
