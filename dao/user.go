@@ -30,6 +30,7 @@ type UserInfo struct {
 	Email      string `gorm:"column:email"`
 	CreateTime time.Time
 	UpdateTime time.Time
+	Del        int
 }
 
 func AddUser(u *UserInfo) bool {
