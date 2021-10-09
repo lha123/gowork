@@ -1,4 +1,4 @@
-module gowork
+module github.com/lha123/gowork
 
 go 1.17
 

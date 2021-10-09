@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lha123/gowork/api"
+	_ "github.com/lha123/gowork/docs"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"gowork/api"
-	_ "gowork/docs"
 	//_ "github.com/swaggo/gin-swagger/example/basic/docs"
 )
 

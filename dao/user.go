@@ -2,10 +2,10 @@ package dao
 
 import (
 	"fmt"
+	"github.com/lha123/gowork/public"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"gowork/public"
 	"log"
 	"time"
 )

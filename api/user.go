@@ -2,11 +2,11 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lha123/gowork/dao"
+	"github.com/lha123/gowork/public"
+	"github.com/lha123/gowork/result"
+	"github.com/lha123/gowork/validata"
 	"github.com/rocket049/gostructcopy"
-	"gowork/dao"
-	"gowork/public"
-	"gowork/result"
-	"gowork/validata"
 	"log"
 	"strconv"
 	"time"
