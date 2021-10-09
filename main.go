@@ -14,6 +14,5 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	v1 := r.Group("/user")
 	api.RegisterUser(v1)
-
 	r.Run(":8089")
 }
