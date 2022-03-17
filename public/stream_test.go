@@ -19,16 +19,11 @@ type stream struct {
 	list []interface{}
 }
 
-func Stream(arrs ...interface{}) *stream {
+func Stream[T []any](arrs T) *stream {
 	st := new(stream)
 	if len(arrs) > 0 {
-		if x, ok := arrs[0].([]interface{}); ok {
-			st.list = make([]interface{}, len(x))
-			copy(st.list, x)
-		} else {
-			st.list = make([]interface{}, len(arrs))
-			copy(st.list, arrs)
-		}
+		st.list = make([]interface{}, len(arrs))
+		copy(st.list, arrs)
 	}
 
 	return st
@@ -284,7 +279,7 @@ func TestStream(t *testing.T) {
 	fmt.Println()
 
 	// 数组去重
-	r5 := Stream(1, 2, 3, 4, 5, 1, 2, 3).Distinct()
+	r5 := Stream(arr).Distinct()
 	fmt.Printf("r5 去重[1, 2, 3, 4, 5, 1, 2, 3]: %v", r5) //r5 去重[1, 2, 3, 4, 5, 1, 2, 3]: [1 2 3 4 5]
 	fmt.Println()
 
