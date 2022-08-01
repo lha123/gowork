@@ -15,22 +15,22 @@ func If(condition bool, trueResult interface{}, falseResult interface{}) interfa
 	return falseResult
 }
 
-type stream struct {
-	list []interface{}
+type stream[T any] struct {
+	list []T
 }
 
-func Stream[T []any](arrs T) *stream {
-	st := new(stream)
-	if len(arrs) > 0 {
-		st.list = make([]interface{}, len(arrs))
-		copy(st.list, arrs)
+func Stream[T any](arr []T) *stream[T] {
+	st := new(stream[T])
+	if len(arr) > 0 {
+		st.list = make([]T, len(arr))
+		copy(st.list, arr)
 	}
 
 	return st
 }
 
-func (s *stream) Filter(fn func(each interface{}) bool) *stream {
-	list := make([]interface{}, 0, len(s.list))
+func (s *stream[T]) Filter(fn func(each interface{}) bool) *stream[T] {
+	list := make([]T, 0, len(s.list))
 	for _, x := range s.list {
 		if fn(x) {
 			list = append(list, x)
@@ -40,26 +40,26 @@ func (s *stream) Filter(fn func(each interface{}) bool) *stream {
 	return s
 }
 
-func (s *stream) ForEach(fn func(each interface{})) {
+func (s *stream[T]) ForEach(fn func(each interface{})) {
 	list := s.list
 	for _, x := range list {
 		fn(x)
 	}
 }
 
-func (s *stream) Collect(r interface{}) {
+func (s *stream[T]) Collect(r interface{}) {
 	bytes, _ := json.Marshal(s.list)
 	json.Unmarshal(bytes, &r)
 }
 
-func (s *stream) FindAny() (interface{}, bool) {
+func (s *stream[T]) FindAny() (interface{}, bool) {
 	if len(s.list) > 0 {
 		return s.list[0], true
 	}
 	return nil, false
 }
 
-func (s *stream) AnyMatch(fn func(each interface{}) bool) bool {
+func (s *stream[T]) AnyMatch(fn func(each interface{}) bool) bool {
 	for _, x := range s.list {
 		if fn(x) {
 			return true
@@ -68,18 +68,18 @@ func (s *stream) AnyMatch(fn func(each interface{}) bool) bool {
 	return false
 }
 
-func (s *stream) Map(fn func(each interface{}) interface{}) *stream {
+func (s *stream[T]) Map(fn func(each T) T) *stream[T] {
 	for i, x := range s.list {
 		s.list[i] = fn(x)
 	}
 	return s
 }
 
-func (s *stream) Count() int {
+func (s *stream[T]) Count() int {
 	return len(s.list)
 }
 
-func (s *stream) Distinct() []interface{} {
+func (s *stream[T]) Distinct() []interface{} {
 	m := make(map[interface{}][]interface{})
 	for _, x := range s.list {
 		m[x] = nil
@@ -92,7 +92,7 @@ func (s *stream) Distinct() []interface{} {
 	return r
 }
 
-func (s *stream) GroupByInt(fn func(each interface{}) int64, r interface{}) {
+func (s *stream[T]) GroupByInt(fn func(each interface{}) int64, r interface{}) {
 	m := make(map[int64][]interface{})
 
 	for _, x := range s.list {
@@ -110,7 +110,7 @@ func (s *stream) GroupByInt(fn func(each interface{}) int64, r interface{}) {
 	_ = json.Unmarshal(bytes, &r)
 }
 
-func (s *stream) GroupByString(fn func(each interface{}) string, r interface{}) {
+func (s *stream[T]) GroupByString(fn func(each interface{}) string, r interface{}) {
 	m := make(map[string][]interface{})
 
 	for _, x := range s.list {
@@ -129,7 +129,7 @@ func (s *stream) GroupByString(fn func(each interface{}) string, r interface{}) 
 
 }
 
-func (s *stream) Sum(fn func(each interface{}) interface{}) float64 {
+func (s *stream[T]) Sum(fn func(each interface{}) interface{}) float64 {
 	var r float64 = 0
 	for _, x := range s.list {
 		p := fn(x)
@@ -147,7 +147,7 @@ func (s *stream) Sum(fn func(each interface{}) interface{}) float64 {
 	return r
 }
 
-func (s *stream) Average(fn func(each interface{}) interface{}) float64 {
+func (s *stream[T]) Average(fn func(each interface{}) interface{}) float64 {
 	var r float64 = 0
 	for _, x := range s.list {
 		p := fn(x)
@@ -165,7 +165,7 @@ func (s *stream) Average(fn func(each interface{}) interface{}) float64 {
 	return r / float64(len(s.list))
 }
 
-func (s *stream) Max(fn func(each interface{}) interface{}) float64 {
+func (s *stream[T]) Max(fn func(each interface{}) interface{}) float64 {
 	var r float64 = math.MinInt64
 	for _, x := range s.list {
 		p := fn(x)
@@ -183,7 +183,7 @@ func (s *stream) Max(fn func(each interface{}) interface{}) float64 {
 	return r
 }
 
-func (s *stream) Min(fn func(each interface{}) interface{}) float64 {
+func (s *stream[T]) Min(fn func(each interface{}) interface{}) float64 {
 	var r = math.MaxFloat64
 	for _, x := range s.list {
 		p := fn(x)
@@ -201,14 +201,14 @@ func (s *stream) Min(fn func(each interface{}) interface{}) float64 {
 	return r
 }
 
-func (s *stream) Reduce(initialValue interface{}, fn func(pre interface{}, cur interface{}) interface{}) interface{} {
+func (s *stream[T]) Reduce(initialValue interface{}, fn func(pre interface{}, cur interface{}) interface{}) interface{} {
 	for i := 0; i < len(s.list); i++ {
 		initialValue = fn(initialValue, s.list[i])
 	}
 	return initialValue
 }
 
-func (s *stream) Sort(fn func(i, j int) bool) []interface{} {
+func (s *stream[T]) Sort(fn func(i, j int) bool) []T {
 	if s.list != nil {
 		sort.SliceStable(s.list, fn)
 	}
@@ -221,6 +221,9 @@ type Student struct {
 	Age   int    `json:"age"`
 	Score int    `json:"score"`
 }
+type arr1 interface {
+	int | string
+}
 
 func TestStream(t *testing.T) {
 
@@ -230,19 +233,19 @@ func TestStream(t *testing.T) {
 	s4 := Student{4, "赵六", 11, 99}
 	s5 := Student{5, "马七", 11, 100}
 	s6 := Student{6, "王八", 20, 80}
-	arr := make([]interface{}, 0)
+	arr := make([]Student, 0)
 	arr = append(arr, s1, s2, s3, s4, s5, s6)
 
 	//arrs := []Student{s1, s2, s3, s4, s5, s6}
 
-	i := Stream(arr).Sort(func(i, j int) bool {
-		if arr[i].(Student).Age == arr[j].(Student).Age {
-			return arr[i].(Student).Score > arr[j].(Student).Score
+	Stream(arr).Sort(func(i, j int) bool {
+		if arr[i].Age == arr[j].Age {
+			return arr[i].Score > arr[j].Score
 		}
-		return arr[i].(Student).Age < arr[j].(Student).Age
+		return arr[i].Age < arr[j].Age
 	})
 
-	fmt.Println(i)
+	//fmt.Println(i)
 
 	r1 := make([]Student, len(arr))
 	// 寻找所有年龄>10的学生
@@ -295,10 +298,10 @@ func TestStream(t *testing.T) {
 
 	r7 := make([]Student, len(arr))
 	// 把id>3的学生年龄+10
-	Stream(arr).Filter(func(each interface{}) bool {
+	Stream[Student](arr).Filter(func(each interface{}) bool {
 		return each.(Student).Id > 3
-	}).Map(func(each interface{}) interface{} {
-		student := each.(Student)
+	}).Map(func(each Student) Student {
+		student := each
 		student.Age = student.Age + 10
 		return student
 	}).Collect(&r7)
@@ -322,8 +325,8 @@ func TestStream(t *testing.T) {
 	// 将id为偶数的学生的分数+10, 再求和
 	r10 := Stream(arr).Filter(func(each interface{}) bool {
 		return each.(Student).Id&1 == 0
-	}).Map(func(each interface{}) interface{} {
-		student := each.(Student)
+	}).Map(func(each Student) Student {
+		student := each
 		student.Age = student.Score + 10
 		return student
 	}).Reduce(0, func(pre interface{}, cur interface{}) interface{} {
