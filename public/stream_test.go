@@ -29,7 +29,7 @@ func Stream[T any](arr []T) *stream[T] {
 	return st
 }
 
-func (s *stream[T]) Filter(fn func(each interface{}) bool) *stream[T] {
+func (s *stream[T]) Filter(fn func(each T) bool) *stream[T] {
 	list := make([]T, 0, len(s.list))
 	for _, x := range s.list {
 		if fn(x) {
@@ -249,8 +249,8 @@ func TestStream(t *testing.T) {
 
 	r1 := make([]Student, len(arr))
 	// 寻找所有年龄>10的学生
-	Stream(arr).Filter(func(each interface{}) bool {
-		return each.(Student).Age > 10
+	Stream(arr).Filter(func(each Student) bool {
+		return each.Age > 10
 	}).Collect(&r1)
 
 	fmt.Printf("r1 所有年龄>10的学生: %v", r1) //r1 所有年龄>10的学生: [{4 赵六 11 99} {5 马七 11 100} {6 王八 20 80}]
@@ -265,8 +265,8 @@ func TestStream(t *testing.T) {
 	fmt.Println()
 
 	// 年龄为11的学生的个数
-	r3 := Stream(arr).Filter(func(each interface{}) bool {
-		return each.(Student).Age == 11
+	r3 := Stream(arr).Filter(func(each Student) bool {
+		return each.Age == 11
 	}).Count()
 
 	fmt.Printf("r3 年龄为11的学生的个数: %v", r3) //r3 年龄为11的学生的个数: 2
@@ -287,8 +287,8 @@ func TestStream(t *testing.T) {
 	fmt.Println()
 
 	// 找出id为2的学生,打印出年龄
-	if r6, ok := Stream(arr).Filter(func(each interface{}) bool {
-		return each.(Student).Id == 222
+	if r6, ok := Stream(arr).Filter(func(each Student) bool {
+		return each.Id == 222
 	}).FindAny(); ok {
 		fmt.Printf("r6 找出id为2的学生,打印出年龄: %v", r6.(Student).Age)
 		fmt.Println()
@@ -298,8 +298,8 @@ func TestStream(t *testing.T) {
 
 	r7 := make([]Student, len(arr))
 	// 把id>3的学生年龄+10
-	Stream[Student](arr).Filter(func(each interface{}) bool {
-		return each.(Student).Id > 3
+	Stream[Student](arr).Filter(func(each Student) bool {
+		return each.Id > 3
 	}).Map(func(each Student) Student {
 		student := each
 		student.Age = student.Age + 10
@@ -323,8 +323,8 @@ func TestStream(t *testing.T) {
 	fmt.Println()
 
 	// 将id为偶数的学生的分数+10, 再求和
-	r10 := Stream(arr).Filter(func(each interface{}) bool {
-		return each.(Student).Id&1 == 0
+	r10 := Stream(arr).Filter(func(each Student) bool {
+		return each.Id&1 == 0
 	}).Map(func(each Student) Student {
 		student := each
 		student.Age = student.Score + 10
